@@ -52,7 +52,27 @@ router.post('/', function(req, res, next) {
 		res.status(500).send(erro.message);
   	});
 });
+//redefinir senha
+router.post('/trocarsenha', function(req, res, next) {
+	console.log('Trocando senha');
 
+	var login = req.body.emailAdmin; // depois de .body, use o nome (name) do campo em seu formulário de login
+	var senha = req.body.senhaAdmin; // depois de .body, use o nome (name) do campo em seu formulário de login	
+	
+	let instrucaoSql = `update administrador set senhaAdmin='${senha}'  where emailAdmin='${login}'`;
+	console.log(instrucaoSql);
+
+	sequelize.query(instrucaoSql, {
+        model:Administrador,
+        mapToModel: true
+    }).then(resultado => {
+        console.log( "Senha redefinida com sucesso");
+        res.send(resultado);
+    }).catch(erro => {
+        console.error(erro);
+        res.status(500).send(erro.message);
+      });
+});
 
 /* Verificação de usuário */
 router.get('/sessao/:login', function(req, res, next) {

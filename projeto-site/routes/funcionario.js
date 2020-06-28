@@ -31,7 +31,27 @@ router.post('/cadastrar', function(req, res, next) {
 });
 
 
+//redefinir senha
+router.post('/trocarsenha', function(req, res, next) {
+	console.log('Trocando senha');
 
+	var login = req.body.emailAdmin; // depois de .body, use o nome (name) do campo em seu formulário de login
+	var senha = req.body.senhaAdmin; // depois de .body, use o nome (name) do campo em seu formulário de login	
+	
+	let instrucaoSql = `update funcionario set senhaFunc='${senha}'  where emailFunc='${login}'`;
+	console.log(instrucaoSql);
+
+	sequelize.query(instrucaoSql, {
+        model:Funcionario,
+        mapToModel: true
+    }).then(resultado => {
+        console.log( "Senha redefinida com sucesso");
+        res.send(resultado);
+    }).catch(erro => {
+        console.error(erro);
+        res.status(500).send(erro.message);
+      });
+});
 
 
 
