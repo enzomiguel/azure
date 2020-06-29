@@ -7,8 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <script src="./js/cadsFunc.js"></script>
-    
-
+  
     <!--Imagen do ícone: -->
     <link rel="icon" href="./img/favicon.ico" type="image/png">
 
@@ -139,7 +138,14 @@
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Perfil
                   </a>
-                  
+                  <!-- <a class="dropdown-item" href="#">
+                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Configurações
+                  </a> -->
+                  <!-- <a class="dropdown-item" href="#">
+                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Log
+                  </a> -->
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -156,28 +162,69 @@
           <!-- Begin Page Content -->
           <div class="container-fluid">
 
-            <h5>Ranking geral dos funcionários</h5>
-
-            <div class="container">
-              <div id="tabelaTotal">
-                <div class="row">
-                  <div class="alert alert-primary col-xl-6 text-center">
-                    Funcionário
-                  </div>
-                  <div class="alert alert-primary col-md text-center">
-                    Horas Trabalhadas
-                  </div>
-                  <div class="alert alert-primary col col-lg-2 text-center">
-                    Posição
-                  </div>
-                </div>
-  
+          <div style="width: 100%;">
+            <div style=" float: right;">
+            <button onclick="dadosFunc()" class="btn btn-todosa" type="button" style="margin-right: 5px; margin-bottom: 5px;"> Todos </button> 
+            <button onclick="gerarEstaveis()" class="btn btn-estaveis" type="button" style="margin-right: 5px; margin-bottom: 5px"> Estáveis </button> 
+            <button onclick="gerarAlertas()" class="btn btn-primary" type="button" style="margin-right: 5px; margin-bottom: 5px"> Alertas </button> 
+            <button onclick="gerarCriticos()" class="btn btn-criticos" type="button" style="margin-right: 5px; margin-bottom: 5px"> Críticos </button> 
+            <button onclick="gerarDesconhecidos()" class="btn btn-desconhecidos" type="button" style="margin-right: 5px; margin-bottom: 5px"> Não logados </button> 
             </div>
+          </div>
+          <br>
+          
+          <h4>Informações gerais:</h4><br>
+          <h6 class="legenda">
+            <img src="./img/green.png"> Estáveis: <span id="statusEstavel"></span> 
+            <img src="./img/yellow.png"> Alertas: <span id="statusAlerta"></span>
+            <img src="./img/red.png"> Críticos: <span id="statusCritica"></span>
+            <img src="./img/orange.png"> Sem informações: <span id="statusDesconhecida"> </span>
+            <img src="./img/maquina.png"> Todas as máquinas: <span id="statusMaquinas"></span>
+          </h6>
+          <br>
+          
+            <div class="row" id="cards">
+
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card shadow h-100" id="card" style="border-left: green;">
+                  <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                          <div class="col mr-2">
+                              <div class="text-xs2 font-weight-bold text-primary text-uppercase mb-1" id="nomef"></div>
+                              <div class="h6 mb-0 font-weight-bold text-gray-700" style="width: 100%; float: left;">Número máquina: <span id="nummaq"></span></div>
+                              <div class="h6 mb-0 font-weight-bold text-gray-700"style="width: 100%; float: right;">Status: <span id="statusid"></span></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+          </div>
         
           </div>
 
             <div class="row">
   
+          <!--   <div class="row">
+  
+            
+              <div class="col-lg-6 mb-4">
+  
+               
+        <footer class="sticky-footer bg-white">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>VISS &copy; Ltda. Visionary Interface and Services for Systems</span>
+            </div>
+          </div>
+        </footer>
+
+  
+      </div>
+      
+  
+    </div> -->
     
   
     <!-- Scroll to Top Button-->
@@ -205,7 +252,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script> -->
   
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -216,94 +263,17 @@
   
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-  
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-  
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-bar-demo.js"></script>
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-  
-    
+
 
   </body>
 </html>
 
 <script>
-
   function pegarDados(){
     var nome = sessionStorage.nome_usuario_meuapp;
     nometop.innerHTML = nome;
-    buscar();
+    dadosFunc();
   } 
 
-       
-  var corpo = document.getElementById("tabelaTotal");
-
-  function adicionar(funcionario, area, posicao) {
-    this.funcionario = funcionario;
-    this.area = area;
-    this.posicao = posicao;
-
-    this.criar_linha = function(){
-      var linha = document.createElement("div");
-      var nome_funcionario = document.createElement("div");
-      var area_funcionario = document.createElement("div");
-      var posicao_funcionario = document.createElement("div");
-
-      nome_funcionario.className = "col-xl-6 text-center bg-warning";
-      area_funcionario.className = "col-md text-center bg-warning";
-      posicao_funcionario = "col col-lg-2 text-center bg-warning";
-
-      var texto_nome = document.createTextNode(nome);
-      var texto_area = document.createTextNode(area);
-      var texto_posicao = document.createTextNode(posicao);
-
-      nome_funcionario.appendChild(texto_nome);
-      area_funcionario.appendChild(texto_area);
-      posicao_funcionario.appendChild(texto_posicao);
-      corpo.appendChild(texto_nome);
-      corpo.appendChild(texto_area);
-      corpo.appendChild(texto_posicao);
-    }
-  }        
-
-   function buscar() {
-    fetch(`/funcionario/select2`, {
-      cache: 'no-store'
-  }).then(function (response) {
-      if (response.ok) {
-
-          response.json().then(function (resposta) {
-
-              for (i = 0; i < resposta.length; i++) {
-                console.log("boa")
-            tabelaTotal.innerHTML += `
-            
-            <div class="row">
-          <div class="col-xl-6 text-center bg-white">
-            ${resposta[i].nomeFunc}
-          </div>
-          <div class="col-md text-center bg-white">
-            ${resposta[i].horasMes} 
-          </div>
-          <div class="col col-lg-2 text-center bg-white">
-            ${i+1} º
-          </div>
-        </div>
-        <div id=""></div>
-            `;
-              }   
-                 
-          });
-      } else {
-          console.error('Nenhum dado encontrado ou erro na API');
-      }
-  })
-      .catch(function (error) {
-          console.error('Erro na obtenção dos dados p/ gráfico: ${error.message}');
-      });
-    }
-
 </script>
+

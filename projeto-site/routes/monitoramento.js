@@ -6,7 +6,7 @@ var Monitoramento = require('../models').Monitoramento; // aqui você coloca o m
 /* Select na tabela do modelo*/
 router.get('/select', function (req, res, next) {
 
-  const instrucaoSql = `select * from monitoramento;`;
+   let instrucaoSql = `select round(valorCPU,2) as cpu, valorMemoria, valorDisco from monitoramento where fk_maquina=1003; `;
 
   sequelize.query(instrucaoSql, {
     model: Monitoramento, // aqui voce coloca o model configurado acima

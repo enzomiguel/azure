@@ -54,6 +54,67 @@ router.post('/trocarsenha', function(req, res, next) {
 });
 
 
+/* Select na tabela do modelo*/
+router.get('/select', function (req, res, next) {
+
+  const instrucaoSql = `select idFunc, nomeFunc, fk_maquina, nomeAdmin, status from funcionario as fun, administrador as adm, maquina as maq where fun.fk_admin=adm.idAdmin and adm.idAdmin = 3 and fun.idFunc=maq.fk_func;`;
+
+  //const instrucaoSql2 = `select * from maquina;`;
+
+  sequelize.query(instrucaoSql, {
+    model: Funcionario,
+    mapToModel: true
+
+  }).then(resultado => {
+      console.log(resultado);
+      res.json(resultado);
+    }).catch(erro => {
+      console.error(erro);
+      res.status(500).send(erro.message);
+    });
+});
+
+router.get('/select2', function (req, res){
+
+  const instrucaoSql = `select nomeFunc, horasMes from funcionario where fk_admin = 3  order by horasMes DESC`;
+
+  sequelize.query(instrucaoSql, {
+    model: Funcionario
+  }).then(resultado => {
+    console.log(resultado);
+    res.json(resultado);
+  }).catch(error =>{
+    console.log(error)
+  })
+});
+
+router.get('/select3', function(req, res){
+
+  const instrucaoSql = `select sum(fk_horas) as soma,fk_trofeu from conquistas inner join funcionario on idFunc = fk_func where  fk_admin = 3 GROUP BY fk_trofeu`;
+
+  sequelize.query(instrucaoSql,{
+    model:Funcionario
+  }).then(resultado => {
+    console.log(resultado);
+    res.json(resultado);
+  }).catch(error =>{
+    console.log(error)
+  })
+});
+
+router.get('/select4', function(req, res){
+
+  const intrucaoSql = `select nomeFunc, emailFunc, fk_trofeu, fk_horas from funcionario inner join conquistas on idFunc = fk_func where  fk_horas >= 40`;
+
+  sequelize.query(intrucaoSql,{
+    model:Funcionario
+  }).then(resultado => {
+    console.log(resultado);
+    res.json(resultado);
+  }).catch(error =>{
+    console.log(error)
+  })
+});
 
 
 
