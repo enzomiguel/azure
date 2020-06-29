@@ -59,9 +59,13 @@ router.post('/trocarsenha', function(req, res, next) {
 
 
 /* Select na tabela do modelo*/
-router.get('/select', function (req, res, next) {
+router.get('/selectRanking', function (req, res, next) {
+  
+  var login = req.params.emailAdmin; // depois de .body, use o nome (name) do campo em seu formulário de login
+	
 
-  const instrucaoSql = `select * from funcionario;`;
+  const instrucaoSql = `SELECT  f.nomeFunc, f.horasMes from administrador a inner join
+   funcionario f on a.fk_empresa = f.fk_empresa where a.emailAdmin = 'yoshi@c6bank.com' order by f.horasMes desc;`;
 
   sequelize.query(instrucaoSql, {
     model: Funcionario, // aqui voce coloca o model configurado acima
@@ -74,6 +78,6 @@ router.get('/select', function (req, res, next) {
       console.error(erro);
       res.status(500).send(erro.message);
     });
-});
+}); 
 
 module.exports = router;

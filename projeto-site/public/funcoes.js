@@ -18,6 +18,7 @@ function verificar_autenticacao() {
     
 }
 
+
 function logoff() {
     finalizar_sessao();
     sessionStorage.clear();
